@@ -1,0 +1,9 @@
+{
+  "name": "skysthelimit",
+  "version": "0.0.1-1",
+  "author": "skysthelimit-dream-team",
+  "dependencies": {
+    "express": "*",
+    "socket.io": "~0.9.16"
+  }
+}
