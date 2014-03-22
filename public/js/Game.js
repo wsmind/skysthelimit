@@ -41,6 +41,9 @@ function Game()
 	
 	this.loader = new THREE.JSONLoader()
 	
+	this.tower = new Tower(this.scene, this.loader, socket)
+	this.player = new Player(this.scene, this.loader, socket)
+	
 	var socket = io.connect()
 	
 	socket.on("connect", function()
@@ -57,15 +60,27 @@ function Game()
 		socket.emit("registerPlayer", {
 			playerName: localStorage.playerName
 		})
+		
+		socket.on("registrationSuccess", function(data)
+		{
+			console.log("we are on face " + data.faceIndex)
+		})
+		
+		socket.on("playerJoined", function(data)
+		{
+			console.log("player " + data.playerName + " joined on face " + data.faceIndex)
+		})
+		
+		socket.on("playerLeaved", function(data)
+		{
+			console.log("player " + data.playerName + " leaved (face " + data.faceIndex + ")")
+		})
 	})
 	
 	socket.on("disconnect", function()
 	{
 		console.log("disconnected!")
 	})
-	
-	this.tower = new Tower(this.scene, this.loader, socket)
-	this.player = new Player(this.scene, this.loader, socket)
 }
 
 Game.prototype.update = function(time)
