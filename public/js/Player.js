@@ -56,7 +56,8 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 			if (!self.mesh)
 				return
 			
-			self.mesh.position = data.position
+			if (data.faceIndex == self.faceIndex)
+				self.mesh.position = data.position
 		})
 	}
 }
@@ -75,6 +76,6 @@ Player.prototype.update = function(time, dt, tower)
 	
 	if (this.isMaster)
 	{
-		this.socket.emit("movePlayer", {position: this.mesh.position})
+		this.socket.emit("movePlayer", {position: this.mesh.position, faceIndex: this.faceIndex})
 	}
 }
