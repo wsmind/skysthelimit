@@ -54,6 +54,7 @@ function Game()
 	})
 	
 	this.tower = new Tower(this.scene, this.loader, socket)
+	this.player = new Player(this.scene, this.loader, socket)
 }
 
 Game.prototype.update = function(time)
@@ -70,6 +71,7 @@ Game.prototype.update = function(time)
 	//light.position.x = Math.sin(time * 0.001) * 5.0
 	
 	this.tower.update(time, dt)
+	this.player.update(time, dt, this.tower)
 	
 	this.renderer.render(this.scene, this.camera)
 }
