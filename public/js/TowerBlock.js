@@ -21,12 +21,12 @@ function TowerBlock(scene, loader, blockData, position)
 			max.add(self.mesh.position)
 			self.boundingBox = new THREE.Box2(min, max)
 			
-			var debugBox = new THREE.BoxHelper() // [-1, 1]^3
+			/*var debugBox = new THREE.BoxHelper() // [-1, 1]^3
 			var size = self.boundingBox.size()
 			var center = self.boundingBox.center()
 			debugBox.scale.set(size.x * 0.5, size.y * 0.5, 0.5)
 			debugBox.position = new THREE.Vector3(center.x, center.y, 0.5)
-			scene.add(debugBox)
+			scene.add(debugBox)*/
 		}
 	})
 }

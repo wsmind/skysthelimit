@@ -18,16 +18,24 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	this.airSpeed = .005
 	this.speed = new THREE.Vector2(0.0, 0.0)
 	this.grounded = false
+	this.animation = null
 	
 	var self = this
 	loader.load("data/girl.js", function(geometry, materials)
 	{
-		self.mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
+		self.mesh = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials))
 		scene.add(self.mesh)
-		self.mesh.castShadow = true
-		self.mesh.receiveShadow = true
 		
 		self.mesh.position.set(3, 0, 0.5)
+		
+		var materials = self.mesh.material.materials
+		for (var k in materials)
+		{
+			materials[k].skinning = true
+		}
+		THREE.AnimationHandler.add(self.mesh.geometry.animations[0])
+		self.animation = new THREE.Animation(self.mesh, "Idle", THREE.AnimationHandler.CATMULLROM)
+		self.animation.play()
 	})
 	
 	if (this.isMaster)
@@ -79,6 +87,11 @@ Player.prototype.update = function(time, dt, towerFace)
 	if (!this.isMaster)
 		return
 	
+	if (this.animation)
+	{
+		this.animation.update(dt / 1000)
+	}
+	
 	var dir = 0
 	if (this.leftPressed)
 		dir -= 1
@@ -104,11 +117,11 @@ Player.prototype.update = function(time, dt, towerFace)
 	max.add(this.mesh.position)
 	this.boundingBox = new THREE.Box2(min, max)
 	
-	tempBox = new THREE.BoxHelper() // [-1, 1]^3
+	/*tempBox = new THREE.BoxHelper() // [-1, 1]^3
 	var size = this.boundingBox.size()
 	var center = this.boundingBox.center()
 	tempBox.scale.set(size.x * 0.5, size.y * 0.5, 0.5)
-	tempBox.position = new THREE.Vector3(center.x, center.y, 0.5)
+	tempBox.position = new THREE.Vector3(center.x, center.y, 0.5)*/
 	
 	// apply collision and trigger events
 	var self = this
