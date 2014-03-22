@@ -127,10 +127,10 @@ Game.prototype.update = function(time)
 		dt = time - this.currentTime
 	this.currentTime = time
 	
-	var cameraTime = time * 0.0004
-	this.camera.position.set(Math.cos(cameraTime) * 14, 3, Math.sin(cameraTime) * 10)
-	this.camera.rotation.x = -0.1
-	this.camera.rotation.y = -cameraTime + Math.PI * 0.5
+	// var cameraTime = time * 0.0004
+	// this.camera.position.set(Math.cos(cameraTime) * 14, 3, Math.sin(cameraTime) * 10)
+	// this.camera.rotation.x = -0.1
+	// this.camera.rotation.y = -cameraTime + Math.PI * 0.5
 	
 	this.tower.update(time, dt)
 	for (i = 0; i < this.players.length; ++i)
