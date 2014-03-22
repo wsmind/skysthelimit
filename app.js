@@ -80,4 +80,9 @@ io.sockets.on("connection", function(socket)
 			face.playerName = null
 		})
 	})
+	
+	socket.on("movePlayer", function(data)
+	{
+		socket.broadcast.emit("playerMoved", data)
+	})
 })

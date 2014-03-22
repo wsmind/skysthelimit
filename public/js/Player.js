@@ -12,6 +12,7 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	this.groundSpeed = .01
 	this.isMaster = isMaster
 	this.faceIndex = faceIndex
+	this.socket = socket
 	
 	var self = this
 	loader.load("data/girl.js", function(geometry, materials)
@@ -48,6 +49,16 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 				self.rightPressed = false
 		})
 	}
+	else
+	{
+		socket.on("playerMoved", function(data)
+		{
+			if (!self.mesh)
+				return
+			
+			self.mesh.position = data.position
+		})
+	}
 }
 
 Player.prototype.update = function(time, dt, tower)
@@ -61,4 +72,9 @@ Player.prototype.update = function(time, dt, tower)
 	if (this.rightPressed)
 		dir += 1
 	this.mesh.position.x += dir * this.groundSpeed * dt
+	
+	if (this.isMaster)
+	{
+		this.socket.emit("movePlayer", {position: this.mesh.position})
+	}
 }

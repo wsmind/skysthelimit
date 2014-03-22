@@ -46,7 +46,7 @@ function Game()
 	this.subscenes = []
 	this.players = []
 	
-	this.subscenes[0] = new THREE.Object3D()
+	/*this.subscenes[0] = new THREE.Object3D()
 	this.scene.add(this.subscenes[0])
 	this.players[0] = new Player(this.subscenes[0], this.loader, socket, true, 0)
 	
@@ -54,10 +54,11 @@ function Game()
 	this.scene.add(this.subscenes[1])
 	this.subscenes[1].rotation.y = Math.PI
 	this.subscenes[1].position.set(0, 0, -10)
-	this.players[1] = new Player(this.subscenes[1], this.loader, socket, false, 2)
+	this.players[1] = new Player(this.subscenes[1], this.loader, socket, false, 2)*/
 	
 	var socket = io.connect()
 	
+	var self = this
 	socket.on("connect", function()
 	{
 		// only ask for a name the first time
@@ -76,11 +77,27 @@ function Game()
 		socket.on("registrationSuccess", function(data)
 		{
 			console.log("we are on face " + data.faceIndex)
+			
+			var subscene = new THREE.Object3D()
+			self.scene.add(subscene)
+			subscene.rotation.y = Math.PI * 0.5 * data.faceIndex
+			self.subscenes.push(subscene)
+			
+			var player = new Player(subscene, self.loader, socket, true, data.faceIndex)
+			self.players.push(player)
 		})
 		
 		socket.on("playerJoined", function(data)
 		{
 			console.log("player " + data.playerName + " joined on face " + data.faceIndex)
+			
+			var subscene = new THREE.Object3D()
+			self.scene.add(subscene)
+			subscene.rotation.y = Math.PI * 0.5 * data.faceIndex
+			self.subscenes.push(subscene)
+			
+			var player = new Player(subscene, self.loader, socket, false, data.faceIndex)
+			self.players.push(player)
 		})
 		
 		socket.on("playerLeaved", function(data)
