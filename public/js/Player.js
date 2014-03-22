@@ -106,16 +106,41 @@ Player.prototype.update = function(time, dt, towerFace)
 	var max = new THREE.Vector2(0.2, 1.1)
 	min.add(this.mesh.position)
 	max.add(this.mesh.position)
-	self.boundingBox = new THREE.Box2(min, max)
+	this.boundingBox = new THREE.Box2(min, max)
 	
 	tempBox = new THREE.BoxHelper() // [-1, 1]^3
-	var size = self.boundingBox.size()
-	var center = self.boundingBox.center()
+	var size = this.boundingBox.size()
+	var center = this.boundingBox.center()
 	tempBox.scale.set(size.x * 0.5, size.y * 0.5, 0.5)
 	tempBox.position = new THREE.Vector3(center.x, center.y, 0.5)
 	
 	// apply collision and trigger events
-	towerFace.collide(this)
+	var self = this
+	towerFace.collide(this, function(collisionInfo, block)
+	{
+		// exclude this contact if it is separating
+		//if (vec2.dot(this.speed, collisionInfo.normal) > 0)
+		//	return
+		
+		var offsetX = collisionInfo.normal.x * collisionInfo.depth
+		var offsetY = collisionInfo.normal.y * collisionInfo.depth
+		self.mesh.position.x += offsetX
+		self.mesh.position.y += offsetY
+		self.boundingBox.min.x += offsetX
+		self.boundingBox.min.y += offsetY
+		self.boundingBox.max.x += offsetX
+		self.boundingBox.max.y += offsetY
+		
+		// keep only tangent velocity
+		/*var normalVelocity = 
+		vec2.scale(normalVelocity, collisionInfo.normal, vec2.dot(this.speed, collisionInfo.normal))
+		vec2.subtract(this.speed, this.speed, normalVelocity)*/
+		
+		// check if we collided with the ground
+		//if (-collisionInfo.normal.y > Math.abs(collisionInfo.normal.x))
+		//	this.grounded = true
+	})
+
 	
 	if (this.mesh.position.y <= 0)
 	{
