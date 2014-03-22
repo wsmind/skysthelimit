@@ -119,11 +119,9 @@ Game.prototype.update = function(time)
 		dt = time - this.currentTime
 	this.currentTime = time
 	
-	//this.plane.rotation.x = -Math.PI * 0.5
-	//this.plane.position.z = -200
-	//this.plane.position.y = 0
-	//this.plane.rotation.z = time * 0.001
-	//light.position.x = Math.sin(time * 0.001) * 5.0
+	this.camera.position.set(Math.cos(time * 0.001) * 14, 3, Math.sin(time * 0.001) * 10)
+	this.camera.rotation.x = -0.1
+	this.camera.rotation.y = -time * 0.001 + Math.PI * 0.5
 	
 	this.tower.update(time, dt)
 	for (i = 0; i < this.players.length; ++i)
