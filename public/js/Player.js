@@ -16,16 +16,24 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	this.groundSpeed = .01
 	this.airSpeed = .005
 	this.jumpSpeed = 0
+	this.animation = null
 	
 	var self = this
 	loader.load("data/girl.js", function(geometry, materials)
 	{
-		self.mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
+		self.mesh = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials))
 		scene.add(self.mesh)
-		self.mesh.castShadow = true
-		self.mesh.receiveShadow = true
 		
 		self.mesh.position.set(0, 0, 0.5)
+		
+		var materials = self.mesh.material.materials
+		for (var k in materials)
+		{
+			materials[k].skinning = true
+		}
+		THREE.AnimationHandler.add(self.mesh.geometry.animations[0])
+		self.animation = new THREE.Animation(self.mesh, "Idle", THREE.AnimationHandler.CATMULLROM)
+		self.animation.play()
 	})
 	
 	if (this.isMaster)
@@ -74,6 +82,11 @@ Player.prototype.update = function(time, dt, towerFace)
 	
 	if (!this.isMaster)
 		return
+	
+	if (this.animation)
+	{
+		this.animation.update(dt / 1000)
+	}
 	
 	var dir = 0
 	if (this.leftPressed)
