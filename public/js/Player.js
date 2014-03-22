@@ -154,11 +154,25 @@ Player.prototype.update = function(time, dt, towerFace)
 	})
 	
 	// ground
-	if ((this.mesh.position.y < 0) && (this.speed.y < 0))
+	if ((this.mesh.position.y <= 0) && (this.speed.y <= 0))
 	{
 		this.mesh.position.y = 0
 		this.speed.y = 0
 		this.grounded = true
+	}
+	
+	// left wall
+	if ((this.mesh.position.x <= 0) && (this.speed.x <= 0))
+	{
+		this.mesh.position.x = 0
+		this.speed.x = 0
+	}
+	
+	// right wall
+	if ((this.mesh.position.x >= towerData.faceWidth) && (this.speed.x >= 0))
+	{
+		this.mesh.position.x = towerData.faceWidth
+		this.speed.x = 0
 	}
 	
 	// broadcast new position to other players
