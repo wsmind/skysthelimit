@@ -53,6 +53,7 @@ function Game()
 	
 	this.subscenes = []
 	this.players = []
+	this.faceIndex = 0
 	
 	/*this.subscenes[0] = new THREE.Object3D()
 	this.scene.add(this.subscenes[0])
@@ -86,11 +87,9 @@ function Game()
 		{
 			console.log("we are on face " + data.faceIndex)
 			
-			var subscene = new THREE.Object3D()
-			self.scene.add(subscene)
-			subscene.rotation.y = Math.PI * 0.5 * data.faceIndex
-			self.subscenes.push(subscene)
+			self.faceIndex = data.faceIndex
 			
+			var subscene = self.tower.faces[data.faceIndex].subscene
 			var player = new Player(subscene, self.loader, socket, true, data.faceIndex)
 			self.players.push(player)
 		})
@@ -99,11 +98,7 @@ function Game()
 		{
 			console.log("player " + data.playerName + " joined on face " + data.faceIndex)
 			
-			var subscene = new THREE.Object3D()
-			self.scene.add(subscene)
-			subscene.rotation.y = Math.PI * 0.5 * data.faceIndex
-			self.subscenes.push(subscene)
-			
+			var subscene = self.tower.faces[data.faceIndex].subscene
 			var player = new Player(subscene, self.loader, socket, false, data.faceIndex)
 			self.players.push(player)
 		})
@@ -120,6 +115,7 @@ function Game()
 	})
 }
 
+tempBox = null
 Game.prototype.update = function(time)
 {
 	var dt = 0
@@ -128,13 +124,18 @@ Game.prototype.update = function(time)
 	this.currentTime = time
 	
 	var cameraTime = time * 0.0004
+	//this.camera.position.set(Math.cos(cameraTime) * 1 + Math.cos(Math.PI * 0.5 * this.faceIndex) * 10, 3, Math.sin(cameraTime) * 2 + Math.sin(Math.PI * 0.5 * this.faceIndex) * 10)
 	this.camera.position.set(Math.cos(cameraTime) * 1, 3, Math.sin(cameraTime) * 2 + 10)
 	this.camera.rotation.x = -0.2
-	//this.camera.rotation.y = -cameraTime + Math.PI * 0.5
+	//this.camera.rotation.y = Math.PI * 0.5 * (this.faceIndex + 1)
 	
 	this.tower.update(time, dt)
 	for (i = 0; i < this.players.length; ++i)
-		this.players[i].update(time, dt, this.tower)
+		this.players[i].update(time, dt, this.tower.faces[i])
+	
+	if (tempBox) this.tower.faces[this.faceIndex].subscene.add(tempBox)
 	
 	this.renderer.render(this.scene, this.camera)
+	
+	if (tempBox) this.tower.faces[this.faceIndex].subscene.remove(tempBox)
 }

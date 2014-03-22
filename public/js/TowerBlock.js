@@ -24,9 +24,8 @@ function TowerBlock(scene, loader, blockData, position)
 			var size = self.boundingBox.size()
 			var center = self.boundingBox.center()
 			debugBox.scale.set(size.x * 0.5, size.y * 0.5, 0.5)
-			scene.add(debugBox)
-			//debugBox.position = self.mesh.position.clone()
 			debugBox.position = new THREE.Vector3(center.x, center.y, 0.5)
+			scene.add(debugBox)
 		}
 	})
 }

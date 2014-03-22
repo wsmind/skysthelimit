@@ -19,8 +19,6 @@ function TowerFace(scene, loader, faceIndex, faceData)
 	}
 }
 
-/*TowerFace.prototype.update = function(time, dt)
+TowerFace.prototype.collide = function(player)
 {
-	// not called
 }
-*/

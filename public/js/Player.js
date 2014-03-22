@@ -41,8 +41,6 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 				self.rightPressed = true
 			if (event.keyCode == 32 && !event.repeat)
 				self.jumpSpeed = .015
-				
-			console.log(event.keyCode)
 		})
 		
 		document.addEventListener('keyup', function(event)
@@ -69,9 +67,12 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	}
 }
 
-Player.prototype.update = function(time, dt, tower)
+Player.prototype.update = function(time, dt, towerFace)
 {
 	if (!this.mesh)
+		return
+	
+	if (!this.isMaster)
 		return
 	
 	var dir = 0
@@ -87,14 +88,28 @@ Player.prototype.update = function(time, dt, tower)
 	this.mesh.position.x += dir * speed * dt
 	this.mesh.position.y += this.jumpSpeed * dt
 	
+	// compute current bounding box
+	var min = new THREE.Vector2(-0.2, 0.0)
+	var max = new THREE.Vector2(0.2, 1.1)
+	min.add(this.mesh.position)
+	max.add(this.mesh.position)
+	self.boundingBox = new THREE.Box2(min, max)
+	
+	tempBox = new THREE.BoxHelper() // [-1, 1]^3
+	var size = self.boundingBox.size()
+	var center = self.boundingBox.center()
+	tempBox.scale.set(size.x * 0.5, size.y * 0.5, 0.5)
+	tempBox.position = new THREE.Vector3(center.x, center.y, 0.5)
+	
+	// apply collision and trigger events
+	towerFace.collide(this)
+	
 	if (this.mesh.position.y <= 0)
 	{
 		this.mesh.position.y = 0
 		this.jumpSpeed = 0
 	}
 	
-	if (this.isMaster)
-	{
-		this.socket.emit("movePlayer", {position: this.mesh.position, faceIndex: this.faceIndex})
-	}
+	// broadcast new position to other players
+	this.socket.emit("movePlayer", {position: this.mesh.position, faceIndex: this.faceIndex})
 }
