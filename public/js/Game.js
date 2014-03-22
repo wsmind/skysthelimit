@@ -39,31 +39,25 @@ function Game()
 	//var light = new THREE.PointLight(0xffffff, 2, 0)
 	//this.scene.add(light)
 	
-	var self = this
-	var loader = new THREE.JSONLoader()
-	loader.load("data/test-object.js", function(geometry, materials)
-	{
-		var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
-		self.scene.add(mesh)
-		mesh.castShadow = true
-		mesh.receiveShadow = true
-		
-		mesh.position.y = 2
-	})
+	this.loader = new THREE.JSONLoader()
+	
+	this.tower = new Tower(this.scene, this.loader)
 }
 
-Game.prototype.update = function(timestamp)
+Game.prototype.update = function(time)
 {
 	var dt = 0
 	if (this.currentTime != null)
-		dt = timestamp - this.currentTime
-	this.currentTime = timestamp
+		dt = time - this.currentTime
+	this.currentTime = time
 	
 	//this.plane.rotation.x = -Math.PI * 0.5
 	//this.plane.position.z = -200
 	//this.plane.position.y = 0
 	//this.plane.rotation.z = time * 0.001
 	//light.position.x = Math.sin(time * 0.001) * 5.0
+	
+	this.tower.update(time, dt)
 	
 	this.renderer.render(this.scene, this.camera)
 }
