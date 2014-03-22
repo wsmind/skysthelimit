@@ -22,7 +22,7 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 		self.mesh.castShadow = true
 		self.mesh.receiveShadow = true
 		
-		self.mesh.position.set(0, 0, 0)
+		self.mesh.position.set(0, 0, 0.5)
 	})
 	
 	if (this.isMaster)

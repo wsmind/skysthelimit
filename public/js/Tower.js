@@ -4,8 +4,8 @@ function Tower(scene, loader, socket)
 	for (var i = 0; i < towerData.faces.length; i++)
 	{
 		var faceData = towerData.faces[i]
-		var face = new TowerFace(scene, loader, i, faceData)
-		this.faces.push(face)
+		this.faces.push(new TowerFace(scene, loader, i * 2 + 0, faceData))
+		this.faces.push(new TowerFace(scene, loader, i * 2 + 1, faceData))
 	}
 }
 

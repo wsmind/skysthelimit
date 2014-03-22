@@ -19,7 +19,8 @@ function TowerFace(scene, loader, faceIndex, faceData)
 	}
 }
 
-TowerFace.prototype.update = function(time, dt)
+/*TowerFace.prototype.update = function(time, dt)
 {
 	// not called
 }
+*/
