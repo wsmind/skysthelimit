@@ -13,9 +13,11 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	
 	this.rightPressed = false
 	this.leftPressed = false
-	this.groundSpeed = .01
+	this.jumpPressed = false
+	//this.groundSpeed = .01
 	this.airSpeed = .005
-	this.jumpSpeed = 0
+	this.speed = new THREE.Vector2(0.0, 0.0)
+	this.grounded = false
 	
 	var self = this
 	loader.load("data/girl.js", function(geometry, materials)
@@ -25,7 +27,7 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 		self.mesh.castShadow = true
 		self.mesh.receiveShadow = true
 		
-		self.mesh.position.set(0, 0, 0.5)
+		self.mesh.position.set(3, 0, 0.5)
 	})
 	
 	if (this.isMaster)
@@ -35,12 +37,12 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 			if (self.keys.indexOf(event.keyCode) != -1)
 				event.preventDefault()
 			
-			if (event.keyCode == 37)
-				self.leftPressed = true
-			if (event.keyCode == 39)
-				self.rightPressed = true
-			if (event.keyCode == 32 && !event.repeat)
-				self.jumpSpeed = .015
+			switch (event.keyCode)
+			{
+				case 37: self.leftPressed = true; break;
+				case 39: self.rightPressed = true; break;
+				case 32: self.jumpPressed = true; break;
+			}
 		})
 		
 		document.addEventListener('keyup', function(event)
@@ -48,10 +50,12 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 			if (self.keys.indexOf(event.keyCode) != -1)
 				event.preventDefault()
 			
-			if (event.keyCode == 37)
-				self.leftPressed = false
-			if (event.keyCode == 39)
-				self.rightPressed = false
+			switch (event.keyCode)
+			{
+				case 37: self.leftPressed = false; break;
+				case 39: self.rightPressed = false; break;
+				case 32: self.jumpPressed = false; break;
+			}
 		})
 	}
 	else
@@ -80,13 +84,18 @@ Player.prototype.update = function(time, dt, towerFace)
 		dir -= 1
 	if (this.rightPressed)
 		dir += 1
-	var speed = this.mesh.position.y > 0 ? this.airSpeed : this.groundSpeed
 	
-	this.jumpSpeed -= .00005 * dt
-	this.jumpSpeed = Math.max(this.jumpSpeed, -.03)
+	this.speed.x = /*this.grounded > 0 ?*/ this.airSpeed;// : this.groundSpeed
+	this.speed.x *= dir
 	
-	this.mesh.position.x += dir * speed * dt
-	this.mesh.position.y += this.jumpSpeed * dt
+	if (this.jumpPressed && this.grounded)
+		this.speed.y = 0.012
+	
+	this.speed.y -= 0.00004 * dt
+	//this.speed.y = Math.max(this.speed.y, -0.03)
+	
+	this.mesh.position.x += this.speed.x * dt
+	this.mesh.position.y += this.speed.y * dt
 	
 	// compute current bounding box
 	var min = new THREE.Vector2(-0.2, 0.0)
@@ -103,11 +112,14 @@ Player.prototype.update = function(time, dt, towerFace)
 	
 	// apply collision and trigger events
 	var self = this
+	this.grounded = false
 	towerFace.collide(this, function(collisionInfo, block)
 	{
+		var speedDotNormal = self.speed.dot(collisionInfo.normal)
+		
 		// exclude this contact if it is separating
-		//if (vec2.dot(this.speed, collisionInfo.normal) > 0)
-		//	return
+		if (speedDotNormal > 0)
+			return
 		
 		var offsetX = collisionInfo.normal.x * collisionInfo.depth
 		var offsetY = collisionInfo.normal.y * collisionInfo.depth
@@ -119,20 +131,21 @@ Player.prototype.update = function(time, dt, towerFace)
 		self.boundingBox.max.y += offsetY
 		
 		// keep only tangent velocity
-		/*var normalVelocity = 
-		vec2.scale(normalVelocity, collisionInfo.normal, vec2.dot(this.speed, collisionInfo.normal))
-		vec2.subtract(this.speed, this.speed, normalVelocity)*/
+		var normalVelocity = collisionInfo.normal.clone()
+		normalVelocity.multiplyScalar(speedDotNormal)
+		self.speed.sub(normalVelocity)
 		
 		// check if we collided with the ground
-		//if (-collisionInfo.normal.y > Math.abs(collisionInfo.normal.x))
-		//	this.grounded = true
+		if (collisionInfo.normal.y > Math.abs(collisionInfo.normal.x))
+			self.grounded = true
 	})
-
 	
-	if (this.mesh.position.y <= 0)
+	// ground
+	if ((this.mesh.position.y < 0) && (this.speed.y < 0))
 	{
 		this.mesh.position.y = 0
-		this.jumpSpeed = 0
+		this.speed.y = 0
+		this.grounded = true
 	}
 	
 	// broadcast new position to other players
