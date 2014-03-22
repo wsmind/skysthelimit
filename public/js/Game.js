@@ -133,11 +133,16 @@ Game.prototype.update = function(time)
 			masterPlayer = this.players[i]
 	}
 	
+	var cameraTime = time * 0.0004
+	var cameraX = 0
 	var cameraY = 3
 	if (masterPlayer != null && masterPlayer.mesh != null)
+	{
+		cameraX = masterPlayer.mesh.position.x + this.tower.faces[this.faceIndex].subscene.position.x // + Math.cos(cameraTime) * 1
 		cameraY = masterPlayer.mesh.position.y + 3
-	var cameraTime = time * 0.0004
-	this.camera.position.set(Math.cos(cameraTime) * 1, cameraY, Math.sin(cameraTime) * 2 + 10)
+	}
+	
+	this.camera.position.set(cameraX, cameraY, 20) // Math.sin(cameraTime) * 2 + 
 	this.camera.rotation.x = -0.2
 	
 	if (tempBox) this.tower.faces[this.faceIndex].subscene.add(tempBox)
