@@ -32,8 +32,16 @@ function Game()
 	this.dirLight.position.set(-1, 1.75, 1)
 	this.dirLight.position.multiplyScalar(50)
 	this.dirLight.castShadow = true
-	this.dirLight.castShadow = true
-	this.dirLight.shadowMapWidth = this.dirLight.shadowMapHeight = 2048;
+	var shadowSize = 10
+	this.dirLight.shadowCameraLeft = -shadowSize;
+	this.dirLight.shadowCameraRight = shadowSize;
+	this.dirLight.shadowCameraTop = shadowSize;
+	this.dirLight.shadowCameraBottom = -shadowSize;
+	this.dirLight.shadowCameraNear = 50;
+	this.dirLight.shadowCameraFar = 250;
+	//this.dirLight.shadowCameraVisible = true
+	//this.dirLight.shadowMapBias = -10;
+	this.dirLight.shadowMapWidth = this.dirLight.shadowMapHeight = 512;
 	this.scene.add(this.dirLight)
 	
 	//var light = new THREE.PointLight(0xffffff, 2, 0)
@@ -119,9 +127,10 @@ Game.prototype.update = function(time)
 		dt = time - this.currentTime
 	this.currentTime = time
 	
-	this.camera.position.set(Math.cos(time * 0.001) * 14, 3, Math.sin(time * 0.001) * 10)
+	var cameraTime = time * 0.0004
+	this.camera.position.set(Math.cos(cameraTime) * 14, 3, Math.sin(cameraTime) * 10)
 	this.camera.rotation.x = -0.1
-	this.camera.rotation.y = -time * 0.001 + Math.PI * 0.5
+	this.camera.rotation.y = -cameraTime + Math.PI * 0.5
 	
 	this.tower.update(time, dt)
 	for (i = 0; i < this.players.length; ++i)
