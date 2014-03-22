@@ -12,7 +12,7 @@ function Game()
 	
 	this.scene = new THREE.Scene()
 	
-	this.camera = new THREE.PerspectiveCamera(45.0, 16.0 / 9.0, 0.1, 1000.0)
+	this.camera = new THREE.PerspectiveCamera(90.0, 16.0 / 9.0, 0.1, 1000.0)
 	this.scene.add(this.camera)
 	this.camera.position.set(0, 5, 20)
 	
@@ -140,16 +140,16 @@ Game.prototype.update = function(time)
 	var cameraTime = time * 0.0004
 	var cameraX = 0
 	var cameraY = 3
-	var masterRealX = masterPlayer.mesh.position.x + this.tower.faces[this.faceIndex].subscene.position.x
+	var masterRealX = 0
 	if (masterPlayer != null && masterPlayer.mesh != null)
 	{
-		cameraX = masterRealX + Math.cos(cameraTime) * 0.1
+		masterRealX = masterPlayer.mesh.position.x + this.tower.faces[this.faceIndex].subscene.position.x
+		cameraX = masterRealX * 1.3 + Math.cos(cameraTime) * 0.4
 		cameraY = masterPlayer.mesh.position.y + 3
 	}
 	
-	this.camera.position.set(cameraX, cameraY, 20)
-	this.camera.rotation.x = -0.2
-	// this.camera.rotation.y = 
+	this.camera.position.set(cameraX, cameraY, -14 * Math.sin(masterRealX * 0.3 / towerData.faceWidth * Math.PI - Math.PI * 0.5))
+	this.camera.rotation.y = masterRealX / towerData.faceWidth * 0.7
 	
 	if (tempBox) this.tower.faces[this.faceIndex].subscene.add(tempBox)
 	
