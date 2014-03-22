@@ -42,7 +42,19 @@ function Game()
 	this.loader = new THREE.JSONLoader()
 	
 	this.tower = new Tower(this.scene, this.loader, socket)
-	this.player = new Player(this.scene, this.loader, socket)
+	
+	this.subscenes = []
+	this.players = []
+	
+	this.subscenes[0] = new THREE.Object3D()
+	this.scene.add(this.subscenes[0])
+	this.players[0] = new Player(this.subscenes[0], this.loader, socket, true, 0)
+	
+	this.subscenes[1] = new THREE.Object3D()
+	this.scene.add(this.subscenes[1])
+	this.subscenes[1].rotation.y = Math.PI
+	this.subscenes[1].position.set(0, 0, -10)
+	this.players[1] = new Player(this.subscenes[1], this.loader, socket, false, 2)
 	
 	var socket = io.connect()
 	
@@ -81,21 +93,6 @@ function Game()
 	{
 		console.log("disconnected!")
 	})
-	
-	this.tower = new Tower(this.scene, this.loader, socket)
-	
-	this.subscenes = []
-	this.players = []
-	
-	this.subscenes[0] = new THREE.Object3D()
-	this.scene.add(this.subscenes[0])
-	this.players[0] = new Player(this.subscenes[0], this.loader, socket, true, 0)
-	
-	this.subscenes[1] = new THREE.Object3D()
-	this.scene.add(this.subscenes[1])
-	this.subscenes[1].rotation.y = Math.PI
-	this.subscenes[1].position.set(0, 0, -10)
-	this.players[1] = new Player(this.subscenes[1], this.loader, socket, false, 2)
 }
 
 Game.prototype.update = function(time)
