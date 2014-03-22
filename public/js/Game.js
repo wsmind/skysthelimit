@@ -41,11 +41,40 @@ function Game()
 	
 	this.loader = new THREE.JSONLoader()
 	
+	this.tower = new Tower(this.scene, this.loader, socket)
+	this.player = new Player(this.scene, this.loader, socket)
+	
 	var socket = io.connect()
 	
 	socket.on("connect", function()
 	{
-		console.log("connected!")
+		// only ask for a name the first time
+		if (!localStorage.playerName)
+		{
+			do
+			{
+				localStorage.playerName = window.prompt("Challenger name", "")
+			} while (localStorage.playerName == "null" || localStorage.playerName == "")
+		}
+		
+		socket.emit("registerPlayer", {
+			playerName: localStorage.playerName
+		})
+		
+		socket.on("registrationSuccess", function(data)
+		{
+			console.log("we are on face " + data.faceIndex)
+		})
+		
+		socket.on("playerJoined", function(data)
+		{
+			console.log("player " + data.playerName + " joined on face " + data.faceIndex)
+		})
+		
+		socket.on("playerLeaved", function(data)
+		{
+			console.log("player " + data.playerName + " leaved (face " + data.faceIndex + ")")
+		})
 	})
 	
 	socket.on("disconnect", function()

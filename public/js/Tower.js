@@ -12,12 +12,6 @@ function Tower(scene, loader, socket)
 		
 		self.mesh.position.set(0, 2, 0)
 	})
-	
-	socket.on("test", function(data)
-	{
-		if (self.mesh)
-			self.mesh.position.y = data.y
-	})
 }
 
 Tower.prototype.update = function(time, dt)
