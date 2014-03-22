@@ -12,14 +12,14 @@ function Player(scene, loader, socket)
 	this.groundSpeed = .01
 	
 	var self = this
-	loader.load("data/test-object.js", function(geometry, materials)
+	loader.load("data/girl.js", function(geometry, materials)
 	{
 		self.mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
 		scene.add(self.mesh)
 		self.mesh.castShadow = true
 		self.mesh.receiveShadow = true
 		
-		self.mesh.position.set(0, 2, 0)
+		self.mesh.position.set(0, 0, 0)
 	})
 	
 	document.addEventListener('keydown', function(event) {
