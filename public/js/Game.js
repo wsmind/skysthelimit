@@ -45,7 +45,18 @@ function Game()
 	
 	socket.on("connect", function()
 	{
-		console.log("connected!")
+		// only ask for a name the first time
+		if (!localStorage.playerName)
+		{
+			do
+			{
+				localStorage.playerName = window.prompt("Challenger name", "")
+			} while (localStorage.playerName == "null" || localStorage.playerName == "")
+		}
+		
+		socket.emit("registerPlayer", {
+			playerName: localStorage.playerName
+		})
 	})
 	
 	socket.on("disconnect", function()
