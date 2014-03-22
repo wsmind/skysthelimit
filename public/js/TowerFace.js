@@ -19,6 +19,11 @@ function TowerFace(scene, loader, faceIndex, faceData)
 	}
 }
 
-TowerFace.prototype.collide = function(player)
+TowerFace.prototype.collide = function(player, callback)
 {
+	for (var i = 0; i < this.blocks.length; i++)
+	{
+		var block = this.blocks[i]
+		block.collide(player, callback)
+	}
 }

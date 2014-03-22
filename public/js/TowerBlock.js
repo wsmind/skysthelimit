@@ -1,6 +1,7 @@
 function TowerBlock(scene, loader, blockData, position)
 {
 	this.mesh = null
+	this.boundingBox = null
 	
 	var self = this
 	loader.load(blockData.model, function(geometry, materials)
@@ -30,8 +31,45 @@ function TowerBlock(scene, loader, blockData, position)
 	})
 }
 
-TowerBlock.prototype.collide = function(player)
+THREE.Box2.prototype.collide = function(box)
 {
+	var collisionInfo = {
+		normal: null,
+		depth: null
+	}
+	
+	function testOverlap(overlap, normal)
+	{
+		if (overlap < 0)
+			return false
+		
+		if ((collisionInfo.depth === null) || (overlap < collisionInfo.depth))
+		{
+			// new minimal overlap found
+			collisionInfo.depth = overlap
+			collisionInfo.normal = normal
+		}
+		
+		return true
+	}
+	
+	if (!testOverlap(this.max.x - box.min.x, new THREE.Vector2(1, 0))) return null
+	if (!testOverlap(box.max.x - this.min.x, new THREE.Vector2(-1, 0))) return null
+	if (!testOverlap(this.max.y - box.min.y, new THREE.Vector2(0, 1))) return null
+	if (!testOverlap(box.max.y - this.min.y, new THREE.Vector2(0, -1))) return null
+	
+	return collisionInfo
+}
+
+// callback(collisionInfo, block)
+TowerBlock.prototype.collide = function(player, callback)
+{
+	if (!this.boundingBox)
+		return
+	
+	var collisionInfo = this.boundingBox.collide(player.boundingBox)
+	if (collisionInfo)
+		callback(collisionInfo, this)
 }
 
 /*TowerBlock.prototype.update = function(time, dt)
