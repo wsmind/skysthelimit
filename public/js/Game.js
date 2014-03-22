@@ -7,6 +7,7 @@ function Game()
 	this.renderer = new THREE.WebGLRenderer()
 	this.renderer.setSize(1280, 720)
 	this.renderer.shadowMapEnabled = true
+	this.renderer.setClearColor(0xddefff, 1)
 	gameDiv.appendChild(this.renderer.domElement)
 	
 	this.scene = new THREE.Scene()
@@ -49,11 +50,9 @@ function Game()
 	
 	this.loader = new THREE.JSONLoader()
 	
-	this.tower = new Tower(this.scene, this.loader, socket)
-	
 	this.subscenes = []
 	this.players = []
-	this.faceIndex = 0
+	this.faceIndex = -1
 	
 	/*this.subscenes[0] = new THREE.Object3D()
 	this.scene.add(this.subscenes[0])
@@ -89,6 +88,8 @@ function Game()
 			
 			self.faceIndex = data.faceIndex
 			
+			self.tower = new Tower(self.scene, self.loader, socket, data.faceIndex)
+			
 			var subscene = self.tower.faces[data.faceIndex].subscene
 			var player = new Player(subscene, self.loader, socket, true, data.faceIndex)
 			self.players.push(player)
@@ -118,6 +119,9 @@ function Game()
 tempBox = null
 Game.prototype.update = function(time)
 {
+	if (this.faceIndex == -1)
+		return
+	
 	var dt = 0
 	if (this.currentTime != null)
 		dt = time - this.currentTime
