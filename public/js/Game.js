@@ -41,7 +41,19 @@ function Game()
 	
 	this.loader = new THREE.JSONLoader()
 	
-	this.tower = new Tower(this.scene, this.loader)
+	var socket = io.connect()
+	
+	socket.on("connect", function()
+	{
+		console.log("connected!")
+	})
+	
+	socket.on("disconnect", function()
+	{
+		console.log("disconnected!")
+	})
+	
+	this.tower = new Tower(this.scene, this.loader, socket)
 }
 
 Game.prototype.update = function(time)
