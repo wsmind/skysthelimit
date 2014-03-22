@@ -46,19 +46,19 @@ io.sockets.on("connection", function(socket)
 		{
 			socket.set("faceIndex", faceIndex, function()
 			{
-				// send join events for all players that were already registered
-				for (var i in faces)
-				{
-					if (faces[i].socket)
-						socket.emit("playerJoined", {playerName: faces[i].playerName, faceIndex: i})
-				}
-				
 				var face = faces[faceIndex]
 				face.socket = socket
 				face.playerName = data.playerName
 				
 				socket.emit("registrationSuccess", {playerName: face.playerName, faceIndex: faceIndex})
 				socket.broadcast.emit("playerJoined", {playerName: face.playerName, faceIndex: faceIndex})
+				
+				// send join events for all players that were already registered
+				for (var i in faces)
+				{
+					if (faces[i].socket && (i != faceIndex))
+						socket.emit("playerJoined", {playerName: faces[i].playerName, faceIndex: i})
+				}
 				
 				console.log("player " + data.playerName + " takes face " + faceIndex)
 			})
