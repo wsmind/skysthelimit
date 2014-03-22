@@ -1,4 +1,4 @@
-function Player(scene, loader, socket)
+function Player(scene, loader, socket, isMaster, faceIndex)
 {
 	// KEYS:
 	//	- 37: left
@@ -10,6 +10,8 @@ function Player(scene, loader, socket)
 	this.rightPressed = false
 	this.leftPressed = false
 	this.groundSpeed = .01
+	this.isMaster = isMaster
+	this.faceIndex = faceIndex
 	
 	var self = this
 	loader.load("data/girl.js", function(geometry, materials)
@@ -22,25 +24,30 @@ function Player(scene, loader, socket)
 		self.mesh.position.set(0, 0, 0)
 	})
 	
-	document.addEventListener('keydown', function(event) {
-		if (self.keys.indexOf(event.keyCode) != -1)
-			event.preventDefault()
+	if (this.isMaster)
+	{
+		document.addEventListener('keydown', function(event)
+		{
+			if (self.keys.indexOf(event.keyCode) != -1)
+				event.preventDefault()
+			
+			if (event.keyCode == 37)
+				self.leftPressed = true
+			if (event.keyCode == 39)
+				self.rightPressed = true
+		})
 		
-		if (event.keyCode == 37)
-			self.leftPressed = true
-		if (event.keyCode == 39)
-			self.rightPressed = true
-	})
-	
-	document.addEventListener('keyup', function(event) {
-		if (self.keys.indexOf(event.keyCode) != -1)
-			event.preventDefault()
-		
-		if (event.keyCode == 37)
-			self.leftPressed = false
-		if (event.keyCode == 39)
-			self.rightPressed = false
-	})
+		document.addEventListener('keyup', function(event)
+		{
+			if (self.keys.indexOf(event.keyCode) != -1)
+				event.preventDefault()
+			
+			if (event.keyCode == 37)
+				self.leftPressed = false
+			if (event.keyCode == 39)
+				self.rightPressed = false
+		})
+	}
 }
 
 Player.prototype.update = function(time, dt, tower)

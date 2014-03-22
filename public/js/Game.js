@@ -54,7 +54,19 @@ function Game()
 	})
 	
 	this.tower = new Tower(this.scene, this.loader, socket)
-	this.player = new Player(this.scene, this.loader, socket)
+	
+	this.subscenes = []
+	this.players = []
+	
+	this.subscenes[0] = new THREE.Object3D()
+	this.scene.add(this.subscenes[0])
+	this.players[0] = new Player(this.subscenes[0], this.loader, socket, true, 0)
+	
+	this.subscenes[1] = new THREE.Object3D()
+	this.scene.add(this.subscenes[1])
+	this.subscenes[1].rotation.y = Math.PI
+	this.subscenes[1].position.set(0, 0, -10)
+	this.players[1] = new Player(this.subscenes[1], this.loader, socket, false, 2)
 }
 
 Game.prototype.update = function(time)
@@ -71,7 +83,8 @@ Game.prototype.update = function(time)
 	//light.position.x = Math.sin(time * 0.001) * 5.0
 	
 	this.tower.update(time, dt)
-	this.player.update(time, dt, this.tower)
+	for (i = 0; i < this.players.length; ++i)
+		this.players[i].update(time, dt, this.tower)
 	
 	this.renderer.render(this.scene, this.camera)
 }
