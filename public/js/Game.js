@@ -33,7 +33,7 @@ function Game()
 	this.dirLight.position.set(-1, 1.75, 1)
 	this.dirLight.position.multiplyScalar(50)
 	this.dirLight.castShadow = true
-	var shadowSize = 10
+	var shadowSize = 20
 	this.dirLight.shadowCameraLeft = -shadowSize;
 	this.dirLight.shadowCameraRight = shadowSize;
 	this.dirLight.shadowCameraTop = shadowSize;
