@@ -7,12 +7,15 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	this.keys = [37, 39, 32]
 
 	this.mesh = null
-	this.rightPressed = false
-	this.leftPressed = false
-	this.groundSpeed = .01
 	this.isMaster = isMaster
 	this.faceIndex = faceIndex
 	this.socket = socket
+	
+	this.rightPressed = false
+	this.leftPressed = false
+	this.groundSpeed = .01
+	this.airSpeed = .005
+	this.jumpSpeed = 0
 	
 	var self = this
 	loader.load("data/girl.js", function(geometry, materials)
@@ -36,6 +39,10 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 				self.leftPressed = true
 			if (event.keyCode == 39)
 				self.rightPressed = true
+			if (event.keyCode == 32 && !event.repeat)
+				self.jumpSpeed = .015
+				
+			console.log(event.keyCode)
 		})
 		
 		document.addEventListener('keyup', function(event)
@@ -72,7 +79,19 @@ Player.prototype.update = function(time, dt, tower)
 		dir -= 1
 	if (this.rightPressed)
 		dir += 1
-	this.mesh.position.x += dir * this.groundSpeed * dt
+	var speed = this.mesh.position.y > 0 ? this.airSpeed : this.groundSpeed
+	
+	this.jumpSpeed -= .00005 * dt
+	this.jumpSpeed = Math.max(this.jumpSpeed, -.03)
+	
+	this.mesh.position.x += dir * speed * dt
+	this.mesh.position.y += this.jumpSpeed * dt
+	
+	if (this.mesh.position.y <= 0)
+	{
+		this.mesh.position.y = 0
+		this.jumpSpeed = 0
+	}
 	
 	if (this.isMaster)
 	{
