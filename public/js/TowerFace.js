@@ -42,5 +42,5 @@ TowerFace.prototype.collide = function(player, callback)
 
 TowerFace.prototype.getBlockAt = function(position)
 {
-	return this.blocks[Math.floor(position.x) + Math.floor(position.y * towerData.faceWidth)]
+	return this.blocks[Math.floor(position.x) + Math.floor(position.y) * towerData.faceWidth]
 }

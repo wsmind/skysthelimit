@@ -103,7 +103,7 @@ var towerData = {
 	],
 	
 	"activationLinks": [
-		{face: 0, trigger: [12, 0], targets: [[5, 0]]}
+		{face: 0, trigger: [11, 0], targets: [[5, 0]]}
 	]
 }
 

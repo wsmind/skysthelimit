@@ -55,7 +55,6 @@ Tower.prototype.loadFaces = function(scene, masterFace)
 			continue
 			
 		var blockIndex = link.trigger[0] + link.trigger[1] * towerData.faceWidth
-		//debugger
 		var block = this.faces[masterFace].blocks[blockIndex]
 		block.targets = []
 		for (var i = 0; i < link.targets.length; ++i)
