@@ -80,7 +80,7 @@ TowerBlock.prototype.collide = function(player, callback)
 
 TowerBlock.prototype.activate = function()
 {
-	console.log("bloc activated!")
+	game.musicManager.playSfx("slidingBlock")
 	if (this.boundingBox == null)
 	{
 		this.boundingBox = new THREE.Box2(new THREE.Vector2(0.0, 0.8), new THREE.Vector2(1.0, 1.0))

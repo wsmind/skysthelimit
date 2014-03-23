@@ -22,7 +22,8 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	this.airSpeed = .005
 	this.speed = new THREE.Vector2(0.0, 0.0)
 	this.grounded = false
-	this.animation = null
+	this.animations = {}
+	this.currentAnimation = null
 	this.stepTime = 0
 	
 	var self = this
@@ -38,9 +39,17 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 		{
 			materials[k].skinning = true
 		}
-		THREE.AnimationHandler.add(self.mesh.geometry.animations[0])
-		self.animation = new THREE.Animation(self.mesh, "idle", THREE.AnimationHandler.CATMULLROM)
-		self.animation.play()
+		
+		for (var i = 0; i < self.mesh.geometry.animations.length; ++i)
+		{
+			if (THREE.AnimationHandler.get(self.mesh.geometry.animations[i].name) == null)
+				THREE.AnimationHandler.add(self.mesh.geometry.animations[i])
+		}
+		
+		self.animations.idle = new THREE.Animation(self.mesh, "idle", THREE.AnimationHandler.CATMULLROM)
+		self.animations.walk = new THREE.Animation(self.mesh, "walk", THREE.AnimationHandler.CATMULLROM)
+		self.currentAnimation = self.animations.idle
+		self.currentAnimation.play()
 	})
 	
 	if (this.isMaster)
@@ -77,11 +86,21 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 		socket.on("playerMoved", function(data)
 		{
 			if (!self.mesh)
-				return
 			
+				return
 			if (data.faceIndex == self.faceIndex)
 				self.mesh.position = data.position
 		})
+	}
+}
+
+Player.prototype.changeAnimation = function(nextAnimation)
+{
+	if (this.currentAnimation.data.name != nextAnimation)
+	{
+		this.currentAnimation.stop()
+		this.currentAnimation = this.animations[nextAnimation]
+		this.currentAnimation.play()
 	}
 }
 
@@ -93,20 +112,13 @@ Player.prototype.update = function(time, dt, towerFace)
 	if (!this.isMaster)
 		return
 	
-	if (this.animation)
-	{
-		this.animation.update(dt / 1000)
-	}
-	
 	// Trigger
 	if (this.triggerPressed)
 	{
-		console.log("up up")
 		this.triggerPressed = false
 		var block = towerFace.getBlockAt({x: this.mesh.position.x, y: this.mesh.position.y + 0.5})
 		if (block.targets != null)
 		{
-			console.log("Block (" + Math.floor(this.mesh.position.x) + ", " + Math.floor(this.mesh.position.y + 0.5) + ") triggered!")
 			for (var i = 0; i < block.targets.length; ++i)
 			{
 				var faceIndex = (Number(this.faceIndex) + block.targets[i].faceOffset + 4) % 4
@@ -129,6 +141,7 @@ Player.prototype.update = function(time, dt, towerFace)
 	{
 		this.speed.y = 0.012
 		game.musicManager.playSfx("jump")
+		this.changeAnimation("idle")
 	}
 	
 	if ((dir != 0) && this.grounded)
@@ -139,6 +152,16 @@ Player.prototype.update = function(time, dt, towerFace)
 			game.musicManager.playSfx("walk")
 			this.stepTime -= soundData.stepDuration
 		}
+		
+		this.changeAnimation("walk")
+		this.mesh.rotation.y = Math.PI * 0.5 * dir
+	}
+	else
+		this.changeAnimation("idle")
+	
+	if (this.currentAnimation != null)
+	{
+		this.currentAnimation.update(dt / 1000)
 	}
 	
 	this.speed.y -= 0.00004 * dt
