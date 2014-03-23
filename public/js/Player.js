@@ -165,7 +165,7 @@ Player.prototype.update = function(time, dt, towerFace)
 	}
 	
 	this.speed.y -= 0.00004 * dt
-	//this.speed.y = Math.max(this.speed.y, -0.03)
+	this.speed.y = Math.max(this.speed.y, -0.015)
 	
 	this.mesh.position.x += this.speed.x * dt
 	this.mesh.position.y += this.speed.y * dt

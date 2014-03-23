@@ -160,7 +160,7 @@ Game.prototype.update = function(time)
 	
 	var dt = 0
 	if (this.currentTime != null)
-		dt = time - this.currentTime
+		dt = Math.min(time - this.currentTime,  1000 / 25)
 	this.currentTime = time
 	
 	var masterPlayer = null
