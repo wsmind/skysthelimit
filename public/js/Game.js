@@ -148,7 +148,9 @@ Game.prototype.update = function(time)
 		cameraY = masterPlayer.mesh.position.y + 3
 	}
 	
-	this.camera.position.set(cameraX, cameraY, -14 * Math.sin(masterRealX * 0.3 / towerData.faceWidth * Math.PI - Math.PI * 0.5))
+	var cameraZ = -14 * Math.sin(masterRealX * 0.3 / towerData.faceWidth * Math.PI - Math.PI * 0.5)
+	var cameraPosition = new THREE.Vector3(cameraX, cameraY, cameraZ)
+	this.camera.position.lerp(cameraPosition, (1 - Math.exp(-this.camera.position.distanceTo(cameraPosition))))
 	this.camera.rotation.y = masterRealX / towerData.faceWidth * 0.7
 	
 	if (tempBox) this.tower.faces[this.faceIndex].subscene.add(tempBox)
