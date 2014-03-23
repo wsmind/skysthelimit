@@ -33,6 +33,11 @@ var soundData = {
 	],
 	
 	effects: {
+		"walk": {
+			files: [
+				"data/jump.mp3"
+			]
+		},
 		"jump": {
 			files: [
 				"data/jump.mp3"
