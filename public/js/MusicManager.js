@@ -1,39 +1,55 @@
 function MusicManager()
 {
+	AudioContext = window.AudioContext || window.webkitAudioContext
 	var context = new AudioContext()
 	
+	var loadedLayers = 0
+	var self = this
 	for (var i = 0; i < soundData.musicLayers.length; i++)
 	{
-		var layer = soundData.musicLayers[i]
-		
-		console.log("loading " + layer.file)
-		this.loadBuffer(context, layer.file, function(buffer)
+		this.loadBuffer(context, soundData.musicLayers[i], function(layer, buffer)
 		{
-			layer.buffer = buffer
+			console.log("loaded: " + layer.file)
+			
 			var source = context.createBufferSource()
 			source.buffer = buffer
 			source.loop = true
 			source.connect(context.destination)
-			source.start(0)
+			
+			layer.buffer = buffer
+			layer.source = source
+			
+			loadedLayers++
+			if (loadedLayers == soundData.musicLayers.length)
+				self.startMusic()
 		})
 	}
 }
 
-MusicManager.prototype.loadBuffer = function(context, path, callback)
+MusicManager.prototype.loadBuffer = function(context, layer, callback)
 {
 	var xhr = new XMLHttpRequest()
-	xhr.open("GET", path, true)
+	xhr.open("GET", layer.file, true)
 	xhr.responseType = "arraybuffer"
 	
 	xhr.onload = function()
 	{
 		context.decodeAudioData(xhr.response, function(buffer)
 		{
-			callback(buffer)
+			callback(layer, buffer)
 		}, function() { console.log("failed to decode audio data") })
 	}
 	
 	xhr.send()
+}
+
+MusicManager.prototype.startMusic = function()
+{
+	for (var i = 0; i < soundData.musicLayers.length; i++)
+	{
+		var layer = soundData.musicLayers[i]
+		layer.source.start(0)
+	}
 }
 
 MusicManager.prototype.update = function(player)
