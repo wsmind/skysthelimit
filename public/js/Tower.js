@@ -14,13 +14,31 @@ Tower.prototype.load = function(scene, loader, socket, masterFace, callback)
 			blockData.geometry = geometry
 			blockData.geometry.materialIndexOffset = allTowerMaterials.length
 			allTowerMaterials = allTowerMaterials.concat(materials)
-			loadedBlockTypes++
 			
-			if (loadedBlockTypes == towerData.blocks.length)
+			function finishBlockLoading()
 			{
-				self.material = new THREE.MeshFaceMaterial(allTowerMaterials)
-				self.loadFaces(scene, masterFace)
-				callback()
+				loadedBlockTypes++
+				
+				if (loadedBlockTypes == towerData.blocks.length)
+				{
+					self.material = new THREE.MeshFaceMaterial(allTowerMaterials)
+					self.loadFaces(scene, masterFace)
+					callback()
+				}
+			}
+			
+			if (blockData.activationModel)
+			{
+				loader.load(blockData.activationModel, function(geometry, materials)
+				{
+					blockData.activationGeometry = geometry
+					blockData.activationMaterial = new THREE.MeshFaceMaterial(materials)
+					finishBlockLoading()
+				})
+			}
+			else
+			{
+				finishBlockLoading()
 			}
 		})
 	}

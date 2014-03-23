@@ -25,6 +25,16 @@ function TowerBlock(scene, faceGeometry, blockData, position)
 			scene.add(debugBox)
 		}
 	}
+	
+	this.type = blockData.type || "wall"
+	
+	this.activated = false
+	if (blockData.activationModel)
+	{
+		var mesh = new THREE.Mesh(blockData.activationGeometry, blockData.activationMaterial)
+		mesh.position = this.position.clone()
+		scene.add(mesh)
+	}
 }
 
 THREE.Box2.prototype.collide = function(box)
