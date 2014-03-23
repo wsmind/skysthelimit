@@ -50,6 +50,9 @@ function Game()
 	
 	this.loader = new THREE.JSONLoader()
 	
+	this.playersJoining = []
+	this.playersLeaving = []
+	
 	this.subscenes = []
 	this.players = []
 	this.faceIndex = -1
@@ -101,14 +104,15 @@ function Game()
 		{
 			console.log("player " + data.playerName + " joined on face " + data.faceIndex)
 			
-			var subscene = self.tower.faces[data.faceIndex].subscene
-			var player = new Player(subscene, self.loader, socket, false, data.faceIndex)
-			self.players.push(player)
+			data.socket = socket
+			self.playersJoining.push(data)
 		})
 		
 		socket.on("playerLeaved", function(data)
 		{
 			console.log("player " + data.playerName + " leaved (face " + data.faceIndex + ")")
+			
+			self.playersLeaving.push(data)
 		})
 	})
 	
@@ -118,11 +122,39 @@ function Game()
 	})
 }
 
+Game.prototype.findPlayer = function(faceIndex)
+{
+	for (var i = 0; i < this.players.length; ++i)
+	{
+		if (this.players[i].faceIndex == faceIndex)
+			return this.players[i]
+	}
+	return null
+}
+
 tempBox = null
 Game.prototype.update = function(time)
 {
 	if (this.faceIndex == -1)
 		return
+	
+	while (this.playersJoining.length > 0)
+	{
+		var data = this.playersJoining.shift()
+		var subscene = this.tower.faces[data.faceIndex].subscene
+		var player = new Player(subscene, this.loader, data.socket, false, data.faceIndex)
+		this.players.push(player)
+	}
+	
+	while (this.playersLeaving.length > 0)
+	{
+		var data = this.playersLeaving.shift()
+		var player = this.findPlayer(data.faceIndex)
+		if (player == null)
+			continue
+		this.tower.faces[data.faceIndex].subscene.remove(player.mesh)
+		this.players.splice(this.players.indexOf(player))
+	}
 	
 	var dt = 0
 	if (this.currentTime != null)
