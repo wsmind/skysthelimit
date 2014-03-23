@@ -4,6 +4,7 @@ function MusicManager()
 	
 	AudioContext = window.AudioContext || window.webkitAudioContext
 	var context = new AudioContext()
+	this.context = context
 	
 	var loadedLayers = 0
 	var self = this
@@ -38,8 +39,9 @@ function MusicManager()
 		var sfx = soundData.effects[name]
 		sfx.buffers = []
 		
-		for (var i = 0; i < sfx.files; i++)
+		for (var i = 0; i < sfx.files.length; i++)
 		{
+			console.log(sfx.files[i])
 			this.loadSfxBuffer(context, sfx, i, function(sfx, i, buffer)
 			{
 				console.log("sfx file: " + sfx.files[i])
@@ -70,7 +72,7 @@ MusicManager.prototype.loadBuffer = function(context, layer, callback)
 MusicManager.prototype.loadSfxBuffer = function(context, sfx, i, callback)
 {
 	var xhr = new XMLHttpRequest()
-	xhr.open("GET", layer.files[i], true)
+	xhr.open("GET", sfx.files[i], true)
 	xhr.responseType = "arraybuffer"
 	
 	xhr.onload = function()
@@ -97,6 +99,20 @@ MusicManager.prototype.startMusic = function()
 
 MusicManager.prototype.playSfx = function(name)
 {
+	var sfx = soundData.effects[name]
+	var buffer = sfx.buffers[Math.floor(Math.random() * sfx.buffers.length)]
+	
+	var source = this.context.createBufferSource()
+	source.buffer = buffer
+	source.playbackRate.value = sfx.pitch + Math.random() * sfx.pitchRandomization
+	
+	var gain = this.context.createGain()
+	gain.gain.value = sfx.gain
+	
+	source.connect(gain)
+	gain.connect(this.context.destination)
+	
+	source.start()
 }
 
 MusicManager.prototype.update = function(time, dt, playerHeight)
@@ -122,6 +138,6 @@ MusicManager.prototype.update = function(time, dt, playerHeight)
 			gainValue = Math.max(gainValue, 0.0)
 		}
 		
-		layer.gain.gain.value = gainValue
+		layer.gain.gain.value = gainValue * soundData.musicGain
 	}
 }

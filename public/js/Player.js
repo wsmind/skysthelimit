@@ -23,6 +23,7 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	this.speed = new THREE.Vector2(0.0, 0.0)
 	this.grounded = false
 	this.animation = null
+	this.stepTime = 0
 	
 	var self = this
 	loader.load("data/girl.js", function(geometry, materials)
@@ -121,7 +122,20 @@ Player.prototype.update = function(time, dt, towerFace)
 	this.speed.x *= dir
 	
 	if (this.jumpPressed && this.grounded)
+	{
 		this.speed.y = 0.012
+		game.musicManager.playSfx("jump")
+	}
+	
+	if ((dir != 0) && this.grounded)
+	{
+		this.stepTime += dt * 0.001
+		if (this.stepTime >= soundData.stepDuration)
+		{
+			game.musicManager.playSfx("walk")
+			this.stepTime -= soundData.stepDuration
+		}
+	}
 	
 	this.speed.y -= 0.00004 * dt
 	//this.speed.y = Math.max(this.speed.y, -0.03)
@@ -144,6 +158,7 @@ Player.prototype.update = function(time, dt, towerFace)
 	
 	// apply collision and trigger events
 	var self = this
+	var oldGrounded = this.grounded
 	this.grounded = false
 	towerFace.collide(this, function(collisionInfo, block)
 	{
@@ -192,6 +207,13 @@ Player.prototype.update = function(time, dt, towerFace)
 	{
 		this.mesh.position.x = towerData.faceWidth
 		this.speed.x = 0
+	}
+	
+	// play a sound when falling on the ground
+	if ((this.grounded != oldGrounded) && this.grounded)
+	{
+		this.stepTime = 0.0
+		game.musicManager.playSfx("hitGround")
 	}
 	
 	// broadcast new position to other players
