@@ -33,32 +33,21 @@ function MusicManager()
 		})
 	}
 	
-	/*for (var name in effects)
+	for (var name in soundData.effects)
 	{
-		var sfx = effects[name]
-		this.loadBuffer(context, soundData.musicLayers[i], function(layer, buffer)
+		var sfx = soundData.effects[name]
+		sfx.buffers = []
+		
+		for (var i = 0; i < sfx.files; i++)
 		{
-			console.log("loaded: " + layer.file)
-			
-			var source = context.createBufferSource()
-			source.buffer = buffer
-			source.loop = true
-			
-			var gain = context.createGain()
-			gain.gain.value = 0
-			
-			source.connect(gain)
-			gain.connect(context.destination)
-			
-			layer.buffer = buffer
-			layer.source = source
-			layer.gain = gain
-			
-			loadedLayers++
-			if (loadedLayers == soundData.musicLayers.length)
-				self.startMusic()
-		})
-	}*/
+			this.loadSfxBuffer(context, sfx, i, function(sfx, i, buffer)
+			{
+				console.log("sfx file: " + sfx.files[i])
+				
+				sfx.buffers.push(buffer)
+			})
+		}
+	}
 }
 
 MusicManager.prototype.loadBuffer = function(context, layer, callback)
@@ -78,6 +67,23 @@ MusicManager.prototype.loadBuffer = function(context, layer, callback)
 	xhr.send()
 }
 
+MusicManager.prototype.loadSfxBuffer = function(context, sfx, i, callback)
+{
+	var xhr = new XMLHttpRequest()
+	xhr.open("GET", layer.files[i], true)
+	xhr.responseType = "arraybuffer"
+	
+	xhr.onload = function()
+	{
+		context.decodeAudioData(xhr.response, function(buffer)
+		{
+			callback(sfx, i, buffer)
+		}, function() { console.log("failed to decode audio data") })
+	}
+	
+	xhr.send()
+}
+
 MusicManager.prototype.startMusic = function()
 {
 	for (var i = 0; i < soundData.musicLayers.length; i++)
@@ -87,6 +93,10 @@ MusicManager.prototype.startMusic = function()
 	}
 	
 	this.musicStarted = true
+}
+
+MusicManager.prototype.playSfx = function(name)
+{
 }
 
 MusicManager.prototype.update = function(time, dt, playerHeight)
