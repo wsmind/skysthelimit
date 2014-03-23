@@ -166,10 +166,14 @@ Game.prototype.update = function(time)
 	var masterPlayer = null
 	for (var i = 0; i < this.players.length; ++i)
 	{
-		this.players[i].update(time, dt, this.tower.faces[i])
+		var face = this.tower.faces[this.players[i].faceIndex]
+		this.players[i].update(time, dt, face)
 		if (this.players[i].isMaster)
 			masterPlayer = this.players[i]
 	}
+	
+	if (masterPlayer && masterPlayer.mesh)
+		this.musicManager.update(time, dt, masterPlayer.mesh.position.y + 0.5)
 	
 	var cameraTime = time * 0.0004
 	var cameraX = 0
