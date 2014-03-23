@@ -50,6 +50,8 @@ function Game()
 	
 	this.loader = new THREE.JSONLoader()
 	
+	this.musicManager = new MusicManager()
+	
 	this.playersJoining = []
 	this.playersLeaving = []
 	
