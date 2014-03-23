@@ -30,7 +30,7 @@ var towerData = {
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,// 2, floor1
 			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0,// 3
 			0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,// 4
-			0, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0,// 5
+			0, 2, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,// 5
 			0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0,// 6
 			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,// 7
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,// 8, floor2
@@ -106,14 +106,14 @@ var towerData = {
 	
 	"activationLinks": [
 		{face: 1, trigger: [5, 0], targets: [ {faceOffset: 2, x: 11, y: 0} ]},		
-		/*{face: 1, trigger: [15, 4], targets: [ {faceOffset: 2, x: 1, y: 4} ]},
+		{face: 1, trigger: [15, 4], targets: [ {faceOffset: 2, x: 1, y: 4} ]},
 		{face: 1, trigger: [4, 6], targets: [ {faceOffset: 2, x: 12, y: 6} ]},
 		{face: 1, trigger: [5, 9], targets: [ {faceOffset: 2, x: 11, y: 9} ]},
 		{face: 1, trigger: [10, 9], targets: [ {faceOffset: 2, x: 6, y: 9} ]},
 		{face: 1, trigger: [9, 10], targets: [ {faceOffset: 2, x: 7, y: 10} ]},
 		{face: 1, trigger: [0, 14], targets: [ {faceOffset: 2, x: 16, y: 14} ]},
 		{face: 1, trigger: [1, 15], targets: [ {faceOffset: 2, x: 15, y: 15} ]},
-		{face: 1, trigger: [4, 17], targets: [ {faceOffset: 2, x: 12, y: 17} ]},
+		/*{face: 1, trigger: [4, 17], targets: [ {faceOffset: 2, x: 12, y: 17} ]},
 		{face: 1, trigger: [3, 19], targets: [ {faceOffset: 2, x: 13, y: 19} ]},
 		{face: 1, trigger: [12, 22], targets: [ {faceOffset: 2, x: 4, y: 22} ]},
 		{face: 1, trigger: [8, 24], targets: [ {faceOffset: 2, x: 8, y: 24} ]},
@@ -123,7 +123,7 @@ var towerData = {
 		{face: 1, trigger: [2, 29], targets: [ {faceOffset: 2, x: 14, y: 29} ]},
 		{face: 1, trigger: [8, 33], targets: [ {faceOffset: 2, x: 8, y: 33} ]},
 		{face: 1, trigger: [8, 35], targets: [ {faceOffset: 2, x: 8, y: 35} ]},*/
-		/*{face: 0, trigger: [15, 1], targets: [ {faceOffset: 2, x: 1, y: 1} ]},
+		{face: 0, trigger: [15, 1], targets: [ {faceOffset: 2, x: 1, y: 1} ]},
 		{face: 0, trigger: [1, 3], targets: [ {faceOffset: 2, x: 15, y: 3} ]},
 		{face: 0, trigger: [10, 3], targets: [ {faceOffset: 2, x: 6, y: 3} ]},
 		{face: 0, trigger: [1, 5], targets: [ {faceOffset: 2, x: 15, y: 5} ]},
@@ -134,7 +134,7 @@ var towerData = {
 		{face: 0, trigger: [6, 13], targets: [ {faceOffset: 2, x: 10, y: 13} ]},
 		{face: 0, trigger: [1, 14], targets: [ {faceOffset: 2, x: 15, y: 14} ]},
 		{face: 0, trigger: [15, 14], targets: [ {faceOffset: 2, x: 1, y: 14} ]},
-		{face: 0, trigger: [9, 17], targets: [ {faceOffset: 2, x: 7, y: 17} ]},
+		/*{face: 0, trigger: [9, 17], targets: [ {faceOffset: 2, x: 7, y: 17} ]},
 		{face: 0, trigger: [7, 20], targets: [ {faceOffset: 2, x: 9, y: 20} ]},
 		{face: 0, trigger: [13, 20], targets: [ {faceOffset: 2, x: 3, y: 20} ]},
 		{face: 0, trigger: [3, 22], targets: [ {faceOffset: 2, x: 13, y: 22} ]},
