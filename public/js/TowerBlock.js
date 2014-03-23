@@ -2,6 +2,7 @@ function TowerBlock(scene, faceGeometry, blockData, position)
 {
 	this.boundingBox = null
 	this.targets = null
+	this.position = position
 	
 	var mesh = new THREE.Mesh(blockData.geometry)
 	mesh.position = new THREE.Vector3(position.x, position.y, position.z)
@@ -70,6 +71,14 @@ TowerBlock.prototype.collide = function(player, callback)
 TowerBlock.prototype.activate = function()
 {
 	console.log("bloc activated!")
+	if (this.boundingBox == null)
+	{
+		this.boundingBox = new THREE.Box2(new THREE.Vector2(0.0, 0.8), new THREE.Vector2(1.0, 1.0))
+		this.boundingBox.min.add(this.position)
+		this.boundingBox.max.add(this.position)
+	}
+	else
+		this.boundingBox = null
 }
 
 /*TowerBlock.prototype.update = function(time, dt)

@@ -107,7 +107,7 @@ Player.prototype.update = function(time, dt, towerFace)
 		{
 			console.log("Block (" + Math.floor(this.mesh.position.x) + ", " + Math.floor(this.mesh.position.y + 0.5) + ") triggered!")
 			for (var i = 0; i < block.targets.length; ++i)
-				this.socket.emit("activateBlock", {faceIndex: (this.faceIndex + 2) % 4, blockIndex: block.targets[i]})
+				this.socket.emit("activateBlock", {faceIndex: (Number(this.faceIndex) + 2) % 4, blockIndex: block.targets[i]})
 		}
 	}
 	

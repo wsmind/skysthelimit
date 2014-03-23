@@ -32,6 +32,33 @@ function MusicManager()
 				self.startMusic()
 		})
 	}
+	
+	/*for (var name in effects)
+	{
+		var sfx = effects[name]
+		this.loadBuffer(context, soundData.musicLayers[i], function(layer, buffer)
+		{
+			console.log("loaded: " + layer.file)
+			
+			var source = context.createBufferSource()
+			source.buffer = buffer
+			source.loop = true
+			
+			var gain = context.createGain()
+			gain.gain.value = 0
+			
+			source.connect(gain)
+			gain.connect(context.destination)
+			
+			layer.buffer = buffer
+			layer.source = source
+			layer.gain = gain
+			
+			loadedLayers++
+			if (loadedLayers == soundData.musicLayers.length)
+				self.startMusic()
+		})
+	}*/
 }
 
 MusicManager.prototype.loadBuffer = function(context, layer, callback)
