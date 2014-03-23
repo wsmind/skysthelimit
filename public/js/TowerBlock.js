@@ -2,10 +2,10 @@ function TowerBlock(scene, faceGeometry, blockData, position)
 {
 	this.boundingBox = null
 	this.targets = null
-	this.position = position
+	this.position = new THREE.Vector3(position.x, position.y, position.z)
 	
 	var mesh = new THREE.Mesh(blockData.geometry)
-	mesh.position = new THREE.Vector3(position.x, position.y, position.z)
+	mesh.position = this.position.clone()
 	
 	THREE.GeometryUtils.merge(faceGeometry, mesh, blockData.geometry.materialIndexOffset)
 	

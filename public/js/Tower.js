@@ -48,7 +48,7 @@ Tower.prototype.loadFaces = function(scene, masterFace)
 		this.faces.push(new TowerFace(scene, i * 2 + 1 - masterFace, faceData, this.material))
 	}
 	
-	for (i = 0; i < towerData.activationLinks.length; ++i)
+	for (var i = 0; i < towerData.activationLinks.length; ++i)
 	{
 		var link = towerData.activationLinks[i]
 		if (link.face != Math.floor(masterFace / 2))
@@ -58,6 +58,6 @@ Tower.prototype.loadFaces = function(scene, masterFace)
 		var block = this.faces[masterFace].blocks[blockIndex]
 		block.targets = []
 		for (var i = 0; i < link.targets.length; ++i)
-			block.targets.push(link.targets[i][0] + link.targets[i][1] * towerData.faceWidth)
+			block.targets.push({faceOffset: link.targets[i].faceOffset, blockIndex: link.targets[i].x + link.targets[i].y * towerData.faceWidth})
 	}
 }
