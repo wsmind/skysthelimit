@@ -4,9 +4,9 @@ function TowerBlock(scene, loader, blockData, position)
 	this.boundingBox = null
 	
 	var self = this
-	loader.load(blockData.model, function(geometry, materials)
+	//loader.load(blockData.model, function(geometry, materials)
 	{
-		self.mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
+		self.mesh = new THREE.Mesh(blockData.geometry, blockData.material)
 		scene.add(self.mesh)
 		self.mesh.castShadow = true
 		self.mesh.receiveShadow = true
@@ -29,7 +29,7 @@ function TowerBlock(scene, loader, blockData, position)
 				scene.add(debugBox)
 			}
 		}
-	})
+	}//)
 }
 
 THREE.Box2.prototype.collide = function(box)
