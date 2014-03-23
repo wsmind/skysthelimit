@@ -38,7 +38,7 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 			materials[k].skinning = true
 		}
 		THREE.AnimationHandler.add(self.mesh.geometry.animations[0])
-		self.animation = new THREE.Animation(self.mesh, "Idle", THREE.AnimationHandler.CATMULLROM)
+		self.animation = new THREE.Animation(self.mesh, "idle", THREE.AnimationHandler.CATMULLROM)
 		self.animation.play()
 	})
 	
