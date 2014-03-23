@@ -1,35 +1,28 @@
-function TowerBlock(scene, loader, blockData, position)
+function TowerBlock(scene, faceGeometry, blockData, position)
 {
-	this.mesh = null
 	this.boundingBox = null
 	
-	var self = this
-	//loader.load(blockData.model, function(geometry, materials)
+	var mesh = new THREE.Mesh(blockData.geometry)
+	mesh.position = new THREE.Vector3(position.x, position.y, position.z)
+	
+	THREE.GeometryUtils.merge(faceGeometry, mesh, blockData.geometry.materialIndexOffset)
+	
+	if (blockData.boundingBox)
 	{
-		self.mesh = new THREE.Mesh(blockData.geometry, blockData.material)
-		scene.add(self.mesh)
-		self.mesh.castShadow = true
-		self.mesh.receiveShadow = true
+		this.boundingBox = blockData.boundingBox.clone()
+		this.boundingBox.min.add(position)
+		this.boundingBox.max.add(position)
 		
-		self.mesh.position = new THREE.Vector3(position.x, position.y, position.z)
-		
-		if (blockData.boundingBox)
+		if (blockData.debugBoundingBoxes)
 		{
-			self.boundingBox = blockData.boundingBox.clone()
-			self.boundingBox.min.add(self.mesh.position)
-			self.boundingBox.max.add(self.mesh.position)
-			
-			if (blockData.debugBoundingBoxes)
-			{
-				var debugBox = new THREE.BoxHelper() // [-1, 1]^3
-				var size = self.boundingBox.size()
-				var center = self.boundingBox.center()
-				debugBox.scale.set(size.x * 0.5, size.y * 0.5, 0.5)
-				debugBox.position = new THREE.Vector3(center.x, center.y, 0.5)
-				scene.add(debugBox)
-			}
+			var debugBox = new THREE.BoxHelper() // [-1, 1]^3
+			var size = this.boundingBox.size()
+			var center = this.boundingBox.center()
+			debugBox.scale.set(size.x * 0.5, size.y * 0.5, 0.5)
+			debugBox.position = new THREE.Vector3(center.x, center.y, 0.5)
+			scene.add(debugBox)
 		}
-	}//)
+	}
 }
 
 THREE.Box2.prototype.collide = function(box)

@@ -13,7 +13,12 @@ var towerData = {
 		},
 		{
 			"model": "data/hole.js",
+			//"triggerType": "action",
+			// activate
 		},
+		/*{
+			"model": "data/switch.js",
+		},*/
 	],
 	
 	"faces": [
@@ -50,6 +55,10 @@ var towerData = {
 			0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
 			1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//floor3
 		]
+	],
+	
+	"activationLinks": [
+		{trigger: [12, 0], target: [5, 0]}
 	]
 }
 

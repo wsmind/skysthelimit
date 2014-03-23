@@ -30,6 +30,8 @@
 		"mapDiffuseWrap" : ["repeat", "repeat"],
 		"mapNormal" : "wall_normal.png",
 		"mapNormalWrap" : ["repeat", "repeat"],
+		"mapSpecular" : "wall_specular.png",
+		"mapSpecularWrap" : ["repeat", "repeat"],
 		"shading" : "Phong",
 		"specularCoef" : 50,
 		"transparency" : 1.0,
@@ -37,7 +39,7 @@
 		"vertexColors" : false
 	}],
 
-	"vertices" : [1,0,0,0,0,0,1,1,0,0,1,0],
+	"vertices" : [1,-5.08868e-18,-1.16415e-10,0,-5.08868e-18,-1.16415e-10,1,1,-4.38278e-08,0,1,-4.38278e-08],
 
 	"morphTargets" : [],
 
