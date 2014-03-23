@@ -171,6 +171,9 @@ Game.prototype.update = function(time)
 			masterPlayer = this.players[i]
 	}
 	
+	if (masterPlayer && masterPlayer.mesh)
+		this.musicManager.update(time, dt, masterPlayer.mesh.position.y + 0.5)
+	
 	var cameraTime = time * 0.0004
 	var cameraX = 0
 	var cameraY = 3
