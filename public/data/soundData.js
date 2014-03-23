@@ -17,7 +17,7 @@ var soundData = {
 		},
 		{
 			file: "data/music_loop_guit_elec_04.wav",
-			heightRange: [1, 25],
+			heightRange: [3, 25],
 			fadeTime: 3,
 		},
 		{
