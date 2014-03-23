@@ -34,6 +34,7 @@ function TowerBlock(scene, faceGeometry, blockData, position)
 		var mesh = new THREE.Mesh(blockData.activationGeometry, blockData.activationMaterial)
 		mesh.position = this.position.clone()
 		scene.add(mesh)
+		this.activationMesh = mesh
 	}
 }
 
@@ -86,9 +87,13 @@ TowerBlock.prototype.activate = function()
 		this.boundingBox = new THREE.Box2(new THREE.Vector2(0.0, 0.8), new THREE.Vector2(1.0, 1.0))
 		this.boundingBox.min.add(this.position)
 		this.boundingBox.max.add(this.position)
+		this.activationMesh.position.z = 0.5
 	}
 	else
+	{
 		this.boundingBox = null
+		this.activationMesh.position.z = 0
+	}
 }
 
 /*TowerBlock.prototype.update = function(time, dt)
