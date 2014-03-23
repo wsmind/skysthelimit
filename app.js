@@ -85,4 +85,11 @@ io.sockets.on("connection", function(socket)
 	{
 		socket.broadcast.emit("playerMoved", data)
 	})
+	
+	socket.on("activateBlock", function(data)
+	{
+		console.log("activation required for block " + data.blockIndex + " on face " +  data.faceIndex)
+		socket.emit("blockActivated", data)
+		socket.broadcast.emit("blockActivated", data)
+	})
 })

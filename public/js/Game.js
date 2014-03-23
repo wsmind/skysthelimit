@@ -92,7 +92,7 @@ function Game()
 			console.log("we are on face " + data.faceIndex)
 			
 			self.tower = new Tower()
-			self.tower.load(self.scene, self.loader, data.faceIndex, function()
+			self.tower.load(self.scene, self.loader, socket, data.faceIndex, function()
 			{
 				self.faceIndex = data.faceIndex
 				
@@ -164,7 +164,7 @@ Game.prototype.update = function(time)
 	this.currentTime = time
 	
 	var masterPlayer = null
-	for (i = 0; i < this.players.length; ++i)
+	for (var i = 0; i < this.players.length; ++i)
 	{
 		this.players[i].update(time, dt, this.tower.faces[i])
 		if (this.players[i].isMaster)
@@ -184,7 +184,7 @@ Game.prototype.update = function(time)
 	
 	var cameraZ = -14 * Math.sin(masterRealX * 0.3 / towerData.faceWidth * Math.PI - Math.PI * 0.5)
 	var cameraPosition = new THREE.Vector3(cameraX, cameraY, cameraZ)
-	this.camera.position.lerp(cameraPosition, (1 - Math.exp(-this.camera.position.distanceTo(cameraPosition))))
+	this.camera.position.lerp(cameraPosition, (1 - Math.exp(-this.camera.position.distanceTo(cameraPosition) * dt / 300)))
 	this.camera.rotation.y = masterRealX / towerData.faceWidth * 0.7
 	
 	if (tempBox) this.tower.faces[this.faceIndex].subscene.add(tempBox)

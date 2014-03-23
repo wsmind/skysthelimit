@@ -4,7 +4,9 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	//	- 37: left
 	//	- 39: right
 	//	- 32: space
-	this.keys = [37, 39, 32]
+	//	- 38: up
+	//	- 40: down
+	this.keys = [37, 39, 32, 38, 40]
 
 	this.mesh = null
 	this.isMaster = isMaster
@@ -14,6 +16,8 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 	this.rightPressed = false
 	this.leftPressed = false
 	this.jumpPressed = false
+	this.triggerPressed = false
+	
 	//this.groundSpeed = .01
 	this.airSpeed = .005
 	this.speed = new THREE.Vector2(0.0, 0.0)
@@ -50,6 +54,7 @@ function Player(scene, loader, socket, isMaster, faceIndex)
 				case 37: self.leftPressed = true; break;
 				case 39: self.rightPressed = true; break;
 				case 32: self.jumpPressed = true; break;
+				case 38: self.triggerPressed = true; break;
 			}
 		})
 		
@@ -90,6 +95,20 @@ Player.prototype.update = function(time, dt, towerFace)
 	if (this.animation)
 	{
 		this.animation.update(dt / 1000)
+	}
+	
+	// Trigger
+	if (this.triggerPressed)
+	{
+		console.log("up up")
+		this.triggerPressed = false
+		var block = towerFace.getBlockAt({x: this.mesh.position.x, y: this.mesh.position.y + 0.5})
+		if (block.targets != null)
+		{
+			console.log("Block (" + Math.floor(this.mesh.position.x) + ", " + Math.floor(this.mesh.position.y + 0.5) + ") triggered!")
+			for (var i = 0; i < block.targets.length; ++i)
+				this.socket.emit("activateBlock", {faceIndex: (this.faceIndex + 2) % 4, blockIndex: block.targets[i]})
+		}
 	}
 	
 	var dir = 0

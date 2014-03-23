@@ -1,6 +1,7 @@
 function TowerBlock(scene, faceGeometry, blockData, position)
 {
 	this.boundingBox = null
+	this.targets = null
 	
 	var mesh = new THREE.Mesh(blockData.geometry)
 	mesh.position = new THREE.Vector3(position.x, position.y, position.z)
@@ -64,6 +65,11 @@ TowerBlock.prototype.collide = function(player, callback)
 	var collisionInfo = this.boundingBox.collide(player.boundingBox)
 	if (collisionInfo)
 		callback(collisionInfo, this)
+}
+
+TowerBlock.prototype.activate = function()
+{
+	console.log("bloc activated!")
 }
 
 /*TowerBlock.prototype.update = function(time, dt)
