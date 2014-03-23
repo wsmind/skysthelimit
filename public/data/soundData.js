@@ -35,12 +35,13 @@ var soundData = {
 	effects: {
 		"walk": {
 			files: [
-				"data/jump.mp3"
+				"data/footstepleft.wav",
+				"data/footstepright.wav"
 			]
 		},
 		"jump": {
 			files: [
-				"data/jump.mp3"
+				"data/jump.wav"
 			]
 		}
 	}
