@@ -86,13 +86,15 @@ function Game()
 		{
 			console.log("we are on face " + data.faceIndex)
 			
-			self.faceIndex = data.faceIndex
-			
-			self.tower = new Tower(self.scene, self.loader, socket, data.faceIndex)
-			
-			var subscene = self.tower.faces[data.faceIndex].subscene
-			var player = new Player(subscene, self.loader, socket, true, data.faceIndex)
-			self.players.push(player)
+			self.tower = new Tower()
+			self.tower.load(self.scene, self.loader, data.faceIndex, function()
+			{
+				self.faceIndex = data.faceIndex
+				
+				var subscene = self.tower.faces[data.faceIndex].subscene
+				var player = new Player(subscene, self.loader, socket, true, data.faceIndex)
+				self.players.push(player)
+			})
 		})
 		
 		socket.on("playerJoined", function(data)
@@ -126,8 +128,6 @@ Game.prototype.update = function(time)
 	if (this.currentTime != null)
 		dt = time - this.currentTime
 	this.currentTime = time
-	
-	this.tower.update(time, dt)
 	
 	var masterPlayer = null
 	for (i = 0; i < this.players.length; ++i)
