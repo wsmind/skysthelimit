@@ -166,7 +166,8 @@ Game.prototype.update = function(time)
 	var masterPlayer = null
 	for (i = 0; i < this.players.length; ++i)
 	{
-		this.players[i].update(time, dt, this.tower.faces[i])
+		var face = this.tower.faces[this.players[i].faceIndex]
+		this.players[i].update(time, dt, face)
 		if (this.players[i].isMaster)
 			masterPlayer = this.players[i]
 	}
