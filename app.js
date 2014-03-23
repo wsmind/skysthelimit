@@ -8,7 +8,7 @@ app.use(express.static(__dirname + "/public"))
 
 server.listen(8080)
 
-var io = require("socket.io").listen(server)
+var io = require("socket.io").listen(server, { log: false })
 
 // tower faces
 var faces = []
