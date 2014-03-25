@@ -102,6 +102,11 @@ function Game()
 			})
 		})
 		
+		socket.on("registrationFailed", function(data)
+		{
+			alert("server full, sorry ;)")
+		})
+		
 		socket.on("playerJoined", function(data)
 		{
 			console.log("player " + data.playerName + " joined on face " + data.faceIndex)
