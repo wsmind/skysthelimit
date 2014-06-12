@@ -6,7 +6,7 @@ var server = http.createServer(app)
 
 app.use(express.static(__dirname + "/public"))
 
-server.listen(8080)
+server.listen(8086)
 
 var io = require("socket.io").listen(server, { log: false })
 
